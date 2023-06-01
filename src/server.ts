@@ -1,11 +1,17 @@
-import express, { Request, Response } from 'express';
-const app = express()
-const port = 3000
+import mongoose from 'mongoose';
+import app from './app';
+import secret from './config/secret';
 
-app.get('/', (req:Request, res:Response) => {
-  res.send('Hello World!')
-})
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+const bootstrap = async () => {
+  try {
+   await mongoose.connect(secret.db_url as string);
+   app.listen(secret.port || 4000, () => {
+    console.log(`Example app listening on port ${secret.port || 4000}`)
+  })
+  } catch (err) {
+    console.log('database connection failed')
+  }
+}
+
+bootstrap()
